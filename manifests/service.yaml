@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3-gateway-svc
+spec:
+  selector:
+    app: s3-gateway
+  ports:
+    - protocol: TCP
+      port: 7777
+      targetPort: 7777

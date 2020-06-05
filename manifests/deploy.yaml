@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storj-s3-gateway-deploy
+  labels:
+    app: s3-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-gateway
+  template:
+    metadata:
+      labels:
+        app: s3-gateway
+    spec:
+      containers:
+      - name: gateway
+        image: storjlabs/gateway:b8e4299-v1.1.0-go1.13.8
+        imagePullPolicy: Always
+        env:
+        - name: RUN_PARAMS
+          value: ""
+        ports:
+        - containerPort: 7777
+        resources:
+          requests:
+            cpu: 0.5
+            memory: 500Mi
+          limits:
+            cpu: 1.5
+            memory: 2Gi
+        livenessProbe:
+          tcpSocket:
+            port: 7777
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          tcpSocket:
+            port: 7777
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        volumeMounts:
+        - name: config
+          mountPath: /root/.local/share/storj/gateway
+        - name: minio
+          mountPath: /root/.local/share/storj/gateway/minio
+      volumes:
+      - name: config
+        configMap:
+          name: gateway-config
+      - emptyDir: {}
+        name: minio
