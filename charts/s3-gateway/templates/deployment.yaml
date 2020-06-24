@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storj-s3-gateway-deploy
+  labels:
+    app: {{ .Values.app }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+    spec:
+      containers:
+      - name: gateway
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: RUN_PARAMS
+          value: ""
+        ports:
+        - containerPort: 7777
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        livenessProbe:
+          tcpSocket:
+            port: 7777
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          tcpSocket:
+            port: 7777
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        volumeMounts:
+        - name: config
+          mountPath: /root/.local/share/storj/gateway
+        - name: minio
+          mountPath: /root/.local/share/storj/gateway/minio
+      volumes:
+      - name: config
+        configMap:
+          name: gateway-config
+      - emptyDir: {}
+        name: minio

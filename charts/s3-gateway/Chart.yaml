@@ -1,0 +1,3 @@
+description: A Helm chart for Storj S3 Gateway
+name: s3-gateway
+version: 0.1.0

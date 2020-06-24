@@ -10,7 +10,7 @@ Once you reach the ["run the gateway" step](https://documentation.tardigrade.io/
 
 ### Deploy:
 
-1. deploy with good ol' kubernetes manifests
+#### deploy with kubernetes manifests
 
 ```
 kubectl create configmap gateway-config --from-file /path/to/gateway/config.yaml
@@ -30,14 +30,14 @@ $ export AWS_SECRET_ACCESS_KEY=<secret>;
 $ aws s3 --endpoint=http://localhost:7777/ ls
 ````
 
-2. deploy with kustomize configs
+#### deploy with helm
 
-WIP
+```
+kubectl create configmap gateway-config --from-file /path/to/gateway/config.yaml
 
-3. deploy with helm
+helm install charts/s3-gateway
+```
 
-WIP
+#### deploy as a sidecar
 
-4. deploy as a sidecar
-
-This is not implemented since the s3 gateway has [high resource requirements](https://documentation.tardigrade.io/api-reference/s3-gateway#minimum-requirements), its better to run as its own deployment.
+This is not recommended since the s3 gateway has [high resource requirements](https://documentation.tardigrade.io/api-reference/s3-gateway#minimum-requirements), its better to run as its own deployment.

@@ -1,0 +1,22 @@
+app: s3-gateway
+
+replicaCount: 1
+
+image:
+  repository: storjlabs/gateway
+  tag: b8e4299-v1.1.0-go1.13.8
+  pullPolicy: Always
+
+containerPort: 7777
+
+resources:
+  requests:
+    cpu: 0.5
+    memory: 500Mi
+  limits:
+    cpu: 1.5
+    memory: 2Gi
+
+service:
+  port: 7777
+  targetport: 7777
